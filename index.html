@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Image Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        #timer {
+            font-size: 24px;
+            color: red;
+        }
+        input[type="text"] {
+            font-size: 18px;
+            padding: 5px;
+            margin-top: 20px;
+        }
+        .result {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .btn:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Random Image Quiz</h1>
+    <div id="image-container">
+        <!-- Image will be displayed here -->
+    </div>
+
+    <div id="timer">Time remaining: 45s</div>
+
+    <input type="text" id="answer-input" placeholder="Type your answer here" />
+    <div id="result" class="result"></div>
+
+    <button id="next-button" class="btn" onclick="nextQuestion()" disabled>Next</button>
+
+    <script>
+        const images = [
+            { src: '니어미웡숭이.jpg', correctAnswer: '니어미원숭의' },
+            { src: '닌지하철휴지.jpg', correctAnswer: '닌지하철휴지' },
+            { src: '크피쉬무디아.jpg', correctAnswer: '크피쉬무디아' },
+            { src: '돌고래마사지.jpg', correctAnswer: '돌고래마사지' },
+            { src: '라이아이죽은.jpg', correctAnswer: '라이아이죽은' },
+            { src: '리게이터여신.jpg', correctAnswer: '리게이터여신' },
+            { src: '리게이터여신.jpg', correctAnswer: '리게이터여신' },
+            { src: '마뇽엄마젖소.jpg', correctAnswer: '마뇽엄마젖소' },
+            { src: '마차분티한다.jpg', correctAnswer: '마차분티한다' },
+            { src: '박첨지엄마젖.jpg', correctAnswer: '박첨지엄마젖' },
+            { src: '사칠남이네볏.jpg', correctAnswer: '사칠남이네볏' },
+            { src: '발록엄마젖소.jpg', correctAnswer: '발록엄마젖소' },
+            { src: '크피쉬무디아.jpg', correctAnswer: '크피쉬무디아' },
+            { src: '어카루스건이.jpg', correctAnswer: '어카루스건이' },
+            { src: '에로인형밍각.jpg', correctAnswer: '에로인형밍각' },
+            { src: '은라이아이죽.jpg', correctAnswer: '라이아이죽은' },
+            { src: '이리나뚱풍이.jpg', correctAnswer: '이리나뚱풍이' },
+            { src: '젖하인즈엄마.jpg', correctAnswer: '하인즈엄마젖' },
+            { src: '킹슬라임게이.jpg', correctAnswer: '킹슬라임게이' },
+            { src: '미하일하일해.jpg', correctAnswer: '미하일하일해' }
+        ];
+        
+        let currentQuestionIndex = 0;
+        let timer;
+        let timeLeft = 45;
+        let isAnswered = false;
+
+        // Function to load the next image and reset the quiz
+        function loadQuestion() {
+            const question = images[currentQuestionIndex];
+            const imageContainer = document.getElementById('image-container');
+            imageContainer.innerHTML = `<img src="${question.src}" alt="Random Image" />`;
+
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('answer-input').value = '';
+            document.getElementById('next-button').disabled = true;
+
+            // Start the timer
+            startTimer();
+        }
+
+        // Function to start the countdown timer
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 45;
+            document.getElementById('timer').innerHTML = `Time remaining: ${timeLeft}s`;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerHTML = `Time remaining: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    checkAnswer();
+                }
+            }, 1000);
+        }
+
+        // Function to check the answer and show the result
+        function checkAnswer() {
+            if (isAnswered) return; // Prevent double submission
+
+            const userAnswer = document.getElementById('answer-input').value.trim().toLowerCase();
+            const correctAnswer = images[currentQuestionIndex].correctAnswer.toLowerCase();
+
+            isAnswered = true;
+
+            if (userAnswer === correctAnswer) {
+                document.getElementById('result').innerHTML = 'Correct!';
+            } else {
+                document.getElementById('result').innerHTML = `Wrong! The correct answer is ${images[currentQuestionIndex].correctAnswer}.`;
+            }
+
+            document.getElementById('next-button').disabled = false;
+        }
+
+        // Function to move to the next question
+        function nextQuestion() {
+            if (currentQuestionIndex < images.length - 1) {
+                currentQuestionIndex++;
+                isAnswered = false;
+                loadQuestion();
+            } else {
+                document.getElementById('result').innerHTML = 'Quiz Completed!';
+                document.getElementById('next-button').disabled = true;
+            }
+        }
+
+        // Event listener for the input field to check on pressing Enter
+        document.getElementById('answer-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Start the first question
+        loadQuestion();
+    </script>
+
+</body>
+</html>
